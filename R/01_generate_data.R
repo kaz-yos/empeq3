@@ -42,10 +42,10 @@ generate_bivariate_standard_normal_covariate <- function(n, rho) {
 ##'
 ##' @export
 generate_tri_treatment_from_two_covariates <- function(X, alpha01, alpha02, alphaXm1, alphaXm2, gamma) {
-    assert_that(length(alpha01) == 1)
-    assert_that(length(alpha02) == 1)
-    assert_that(length(alphaXm1) == 1)
-    assert_that(length(alphaXm2) == 1)
+    assertthat::assert_that(length(alpha01) == 1)
+    assertthat::assert_that(length(alpha02) == 1)
+    assertthat::assert_that(length(alphaXm1) == 1)
+    assertthat::assert_that(length(alphaXm2) == 1)
 
     datagen3::generate_tri_treatment(X,
                                      alphas1 = c(alpha01, alphaXm1, gamma * alphaXm1),
