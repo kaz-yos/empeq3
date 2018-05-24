@@ -68,7 +68,7 @@ generate_tri_treatment_from_two_covariates <- function(X, alpha01, alpha02, alph
 ##' @param beta0 Outcome model intercept coefficient
 ##' @param betaA Outcome model coefficient for I(A_i = 1) and I(A_i = 2)
 ##' @param betaX Outcome model coefficient vector for covariates X_i
-##' @param betaXA1 Outcome model interaction coefficients for covariates. betaXA = c(betaXA1, betaXA2)
+##' @param betaXA Outcome model interaction coefficients for covariates. betaXA = c(betaXA1, betaXA2)
 ##'
 ##' @return a complete simulated data_frame
 ##'
@@ -79,18 +79,37 @@ generate_bivariate_normal_data_count <- function(n,
                                                  ## Covariate geenration
                                                  rho,
                                                  ## Treatment assignment
-                                                 alpha01,
-                                                 alpha02,
-                                                 alphaXm1,
-                                                 alphaXm2,
+                                                 alphas,
                                                  gamma,
                                                  ## Outcome assignment
                                                  beta0,
-                                                 betaA1,
-                                                 betaA2,
+                                                 betaA,
                                                  betaX,
-                                                 betaXA1,
-                                                 betaXA2) {
+                                                 betaXA) {
+
+    n_covariates <- 2
+    assertthat::assert_that(length(n) == 1)
+    assertthat::assert_that(length(rho) == 1)
+    ## These alphas
+    assertthat::assert_that(length(alphas) == 4)
+    assertthat::assert_that(length(gamma) == 1)
+    ## betaA = c(betaA1, betaA2)
+    assertthat::assert_that(length(betaA) == 2)
+    ## Only two covariates
+    assertthat::assert_that(length(betaX) == n_covariates)
+    ## Four interaction coefficients
+    assertthat::assert_that(length(betaXA) == 2 * n_covariates)
+
+
+    ## Extract parameters for use
+    alpha01 <- alphas[1]
+    alphaXm1 <- alphas[2]
+    alpha02 <- alphas[3]
+    alphaXm2 <- alphas[4]
+    betaA1 <- betaA[1]
+    betaA2 <- betaA[2]
+    betaXA1 <- betaXA[seq_len(n_covariates)]
+    betaXA2 <- betaXA[n_covariates + seq_len(n_covariates)]
 
     n %>%
         generate_bivariate_standard_normal_covariate(rho = rho) %>%
