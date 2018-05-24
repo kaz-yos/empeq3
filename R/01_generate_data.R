@@ -86,9 +86,11 @@ generate_bivariate_normal_data_count <- function(n,
                                                  gamma,
                                                  ## Outcome assignment
                                                  beta0,
-                                                 betaA,
+                                                 betaA1,
+                                                 betaA2,
                                                  betaX,
-                                                 betaXA) {
+                                                 betaXA1,
+                                                 betaXA2) {
 
     n %>%
         generate_bivariate_standard_normal_covariate(rho = rho) %>%
@@ -98,7 +100,9 @@ generate_bivariate_normal_data_count <- function(n,
                                                    alphaXm2 = alphaXm2,
                                                    gamma = gamma) %>%
         datagen3::generate_count_outcome_log_tri_treatment(beta0 = beta0,
-                                                           betaA = betaA,
+                                                           betaA1 = betaA1,
+                                                           betaA2 = betaA2,
                                                            betaX = betaX,
-                                                           betaXA = betaXA)
+                                                           betaXA1 = betaXA1,
+                                                           betaXA2 = betaXA2)
 }
