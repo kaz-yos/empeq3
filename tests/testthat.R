@@ -1,4 +1,4 @@
 library(testthat)
-library(datagen3)
+library(empeq3)
 
-test_check("datagen3")
+test_check("empeq3")
