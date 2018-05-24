@@ -59,10 +59,7 @@ generate_tri_treatment_from_two_covariates <- function(X, alpha01, alpha02, alph
 ##'
 ##' @param n Sample size
 ##'
-##' @param alpha01 True intercept for the first linear predictor.
-##' @param alpha02 True intercept for the second linear predictor.
-##' @param alphaXm1 True coefficients for the first variable for the first linear predictor.
-##' @param alphaXm2 True coefficients for the first variable for the second linear predictor.
+##' @param alphas True coefficients for the first and second treatment linear predictors. This vector should contain the intercept. alphas = c(alpha01, alphaXm1, alpha02, alphaXm2)
 ##' @param gamma Ratio of the true coefficient for the second variable and the first variable.
 ##'
 ##' @param beta0 Outcome model intercept coefficient
