@@ -7,7 +7,7 @@
 
 ##' Generate bivariate standard normal distribution with correlation rho
 ##'
-##' .. content for \details{} ..
+##' .. content for details ..
 ##'
 ##' @param n  Sample size
 ##' @param rho Correlation coefficient between X1 and X2
@@ -29,7 +29,7 @@ generate_bivariate_standard_normal_covariate <- function(n, rho) {
 
 ##' Generate three-valued treatment with constraint on
 ##'
-##' .. content for \details{} ..
+##' .. content for details ..
 ##'
 ##' @param X data_frame containing two covariates
 ##' @param alpha01 True intercept for the first linear predictor.
@@ -50,4 +50,55 @@ generate_tri_treatment_from_two_covariates <- function(X, alpha01, alpha02, alph
     datagen3::generate_tri_treatment(X,
                                      alphas1 = c(alpha01, alphaXm1, gamma * alphaXm1),
                                      alphas2 = c(alpha02, alphaXm2, gamma * alphaXm2))
+}
+
+
+##' Generate data from bivariate normal covariates (count outcome)
+##'
+##' .. content for details ..
+##'
+##' @param n Sample size
+##'
+##' @param alpha01 True intercept for the first linear predictor.
+##' @param alpha02 True intercept for the second linear predictor.
+##' @param alphaXm1 True coefficients for the first variable for the first linear predictor.
+##' @param alphaXm2 True coefficients for the first variable for the second linear predictor.
+##' @param gamma Ratio of the true coefficient for the second variable and the first variable.
+##'
+##' @param beta0 Outcome model intercept coefficient
+##' @param betaA Outcome model coefficient for I(A_i = 1) and I(A_i = 2)
+##' @param betaX Outcome model coefficient vector for covariates X_i
+##' @param betaXA1 Outcome model interaction coefficients for covariates. betaXA = c(betaXA1, betaXA2)
+##'
+##' @return a complete simulated data_frame
+##'
+##' @author Kazuki Yoshida
+##'
+##' @export
+generate_bivariate_normal_data_count <- function(n,
+                                                 ## Covariate geenration
+                                                 rho,
+                                                 ## Treatment assignment
+                                                 alpha01,
+                                                 alpha02,
+                                                 alphaXm1,
+                                                 alphaXm2,
+                                                 gamma,
+                                                 ## Outcome assignment
+                                                 beta0,
+                                                 betaA,
+                                                 betaX,
+                                                 betaXA) {
+
+    n %>%
+        generate_bivariate_standard_normal_covariate(rho = rho) %>%
+        generate_tri_treatment_from_two_covariates(alpha01 = alpha01,
+                                                   alpha02 = alpha02,
+                                                   alphaXm1 = alphaXm1,
+                                                   alphaXm2 = alphaXm2,
+                                                   gamma = gamma) %>%
+        datagen3::generate_count_outcome_log_tri_treatment(beta0 = beta0,
+                                                           betaA = betaA,
+                                                           betaX = betaX,
+                                                           betaXA = betaXA)
 }
