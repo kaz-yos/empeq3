@@ -1,5 +1,5 @@
-Package: trim3
-Title: Conduct three-group trimming study
+Package: empeq3
+Title: Conduct three-group empirical equipoise study
 Version: 0.1.0
 Authors: Kazuki Yoshida
 Description: What the package does (one paragraph).
@@ -11,7 +11,9 @@ Imports:
     foreach,
     doRNG,
     VGAM,
-    sandwich
+    sandwich,
+    datagen3,
+    trim3
 Suggests:
     testthat
 License: What license is it under?
