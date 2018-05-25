@@ -37,19 +37,20 @@ generate_bivariate_standard_normal_covariate <- function(n, rho) {
 ##' @param alphaXm1 True coefficients for the first variable for the first linear predictor.
 ##' @param alphaXm2 True coefficients for the first variable for the second linear predictor.
 ##' @param gamma Ratio of the true coefficient for the second variable and the first variable.
+##' @param sigma scaling of all covariate effects. A higher value means stronger covariate effects, i.e., less clinical equipoise.
 ##'
 ##' @return df with treatment (A) added.
 ##'
 ##' @export
-generate_tri_treatment_from_two_covariates <- function(X, alpha01, alpha02, alphaXm1, alphaXm2, gamma) {
+generate_tri_treatment_from_two_covariates <- function(X, alpha01, alpha02, alphaXm1, alphaXm2, gamma, sigma) {
     assertthat::assert_that(length(alpha01) == 1)
     assertthat::assert_that(length(alpha02) == 1)
     assertthat::assert_that(length(alphaXm1) == 1)
     assertthat::assert_that(length(alphaXm2) == 1)
 
     datagen3::generate_tri_treatment(X,
-                                     alphas1 = c(alpha01, alphaXm1, gamma * alphaXm1),
-                                     alphas2 = c(alpha02, alphaXm2, gamma * alphaXm2))
+                                     alphas1 = c(alpha01, sigma * alphaXm1, sigma * gamma * alphaXm1),
+                                     alphas2 = c(alpha02, sigma * alphaXm2, sigma * gamma * alphaXm2))
 }
 
 
@@ -61,6 +62,7 @@ generate_tri_treatment_from_two_covariates <- function(X, alpha01, alpha02, alph
 ##'
 ##' @param alphas True coefficients for the first and second treatment linear predictors. This vector should contain the intercept. alphas = c(alpha01, alphaXm1, alpha02, alphaXm2)
 ##' @param gamma Ratio of the true coefficient for the second variable and the first variable.
+##' @param sigma scaling of all covariate effects. A higher value means stronger covariate effects, i.e., less clinical equipoise.
 ##'
 ##' @param beta0 Outcome model intercept coefficient
 ##' @param betaA Outcome model coefficient for I(A_i = 1) and I(A_i = 2)
@@ -78,6 +80,7 @@ generate_bivariate_normal_data_count <- function(n,
                                                  ## Treatment assignment
                                                  alphas,
                                                  gamma,
+                                                 sigma,
                                                  ## Outcome assignment
                                                  beta0,
                                                  betaA,
@@ -90,6 +93,7 @@ generate_bivariate_normal_data_count <- function(n,
     ## These alphas
     assertthat::assert_that(length(alphas) == 4)
     assertthat::assert_that(length(gamma) == 1)
+    assertthat::assert_that(length(sigma) == 1)
     ## betaA = c(betaA1, betaA2)
     assertthat::assert_that(length(betaA) == 2)
     ## Only two covariates
@@ -114,7 +118,8 @@ generate_bivariate_normal_data_count <- function(n,
                                                    alpha02 = alpha02,
                                                    alphaXm1 = alphaXm1,
                                                    alphaXm2 = alphaXm2,
-                                                   gamma = gamma) %>%
+                                                   gamma = gamma,
+                                                   sigma = sigma) %>%
         datagen3::generate_count_outcome_log_tri_treatment(beta0 = beta0,
                                                            betaA1 = betaA1,
                                                            betaA2 = betaA2,
