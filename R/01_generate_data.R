@@ -68,7 +68,7 @@ generate_p_dimensional_standard_normal_covariates <- function(n, p, rho) {
 ##' @return data_frame containing p covariates X1 through Xp. Each one is marginally N(0,1). Their correlation structure is compound symmetry.
 ##'
 ##' @export
-generate_cont_count_bin_covariates <- function(n, p, rho, lambda, prev) {
+generate_p_dimensional_cont_count_bin_covariates <- function(n, p, rho, lambda, prev) {
     assertthat::assert_that(length(n) == 1)
     assertthat::assert_that(length(p) == 1)
     assertthat::assert_that(length(rho) == 1)
@@ -259,7 +259,7 @@ generate_p_norm_count_bin_data_count <- function(n,
     betaXA2 <- betaXA[n_covariates + seq_len(n_covariates)]
 
     n %>%
-        generate_p_dimensional_standard_normal_covariates(p = p, rho = rho) %>%
+        generate_p_dimensional_cont_count_bin_covariates(p = p, rho = rho, lambda = lambda, prev = prev) %>%
         datagen3::generate_tri_treatment(alphas1 = c(alpha01, sigma * alphaX1),
                                          alphas2 = c(alpha02, sigma * alphaX2)) %>%
         datagen3::generate_count_outcome_log_tri_treatment(beta0 = beta0,
