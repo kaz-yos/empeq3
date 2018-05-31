@@ -120,6 +120,8 @@ generate_tri_treatment_from_two_covariates <- function(X, alpha01, alpha02, alph
 ##'
 ##' @param n Sample size
 ##'
+##' @param rho correlation coefficient
+##'
 ##' @param alphas True coefficients for the first and second treatment linear predictors. This vector should contain the intercept. alphas = c(alpha01, alphaXm1, alpha02, alphaXm2)
 ##' @param gamma Ratio of the true coefficient for the second variable and the first variable.
 ##' @param sigma scaling of all covariate effects. A higher value means stronger covariate effects, i.e., less clinical equipoise.
@@ -135,7 +137,7 @@ generate_tri_treatment_from_two_covariates <- function(X, alpha01, alpha02, alph
 ##'
 ##' @export
 generate_bivariate_normal_data_count <- function(n,
-                                                 ## Covariate geenration
+                                                 ## Covariate generation
                                                  rho,
                                                  ## Treatment assignment
                                                  alphas,
@@ -150,6 +152,93 @@ generate_bivariate_normal_data_count <- function(n,
     n_covariates <- 2
     assertthat::assert_that(length(n) == 1)
     assertthat::assert_that(length(rho) == 1)
+    ## These alphas
+    assertthat::assert_that(length(alphas) == 4)
+    assertthat::assert_that(length(gamma) == 1)
+    assertthat::assert_that(length(sigma) == 1)
+    ## betaA = c(betaA1, betaA2)
+    assertthat::assert_that(length(betaA) == 2)
+    ## Only two covariates
+    assertthat::assert_that(length(betaX) == n_covariates)
+    ## Four interaction coefficients
+    assertthat::assert_that(length(betaXA) == 2 * n_covariates)
+
+
+    ## Extract parameters for use
+    alpha01 <- alphas[1]
+    alphaXm1 <- alphas[2]
+    alpha02 <- alphas[3]
+    alphaXm2 <- alphas[4]
+    betaA1 <- betaA[1]
+    betaA2 <- betaA[2]
+    betaXA1 <- betaXA[seq_len(n_covariates)]
+    betaXA2 <- betaXA[n_covariates + seq_len(n_covariates)]
+
+    n %>%
+        generate_bivariate_standard_normal_covariate(rho = rho) %>%
+        generate_tri_treatment_from_two_covariates(alpha01 = alpha01,
+                                                   alpha02 = alpha02,
+                                                   alphaXm1 = alphaXm1,
+                                                   alphaXm2 = alphaXm2,
+                                                   gamma = gamma,
+                                                   sigma = sigma) %>%
+        datagen3::generate_count_outcome_log_tri_treatment(beta0 = beta0,
+                                                           betaA1 = betaA1,
+                                                           betaA2 = betaA2,
+                                                           betaX = betaX,
+                                                           betaXA1 = betaXA1,
+                                                           betaXA2 = betaXA2)
+}
+
+
+##' Generate data from p-variate normal covariates (count outcome)
+##'
+##' .. content for details ..
+##'
+##' @param n Sample size
+##'
+##' @param p number of covariates. Must be 3 or more.
+##' @param rho correlation coefficient
+##' @param lambda mean parameter for X2
+##' @param prev prevalence vector for X3 through Xp
+##'
+##' @param alphas True coefficients for the first and second treatment linear predictors. This vector should contain the intercept. alphas = c(alpha01, alphaXm1, alpha02, alphaXm2)
+##' @param gamma Ratio of the true coefficient for the second variable and the first variable.
+##' @param sigma scaling of all covariate effects. A higher value means stronger covariate effects, i.e., less clinical equipoise.
+##'
+##' @param beta0 Outcome model intercept coefficient
+##' @param betaA Outcome model coefficient for I(A_i = 1) and I(A_i = 2)
+##' @param betaX Outcome model coefficient vector for covariates X_i
+##' @param betaXA Outcome model interaction coefficients for covariates. betaXA = c(betaXA1, betaXA2)
+##'
+##' @return a complete simulated data_frame
+##'
+##' @author Kazuki Yoshida
+##'
+##' @export
+generate_p_norm_count_bin_data_count <- function(n,
+                                                 ## Covariate generation
+                                                 p,
+                                                 rho,
+                                                 lambda,
+                                                 prev,
+                                                 ## Treatment assignment
+                                                 alphas,
+                                                 gamma,
+                                                 sigma,
+                                                 ## Outcome assignment
+                                                 beta0,
+                                                 betaA,
+                                                 betaX,
+                                                 betaXA) {
+
+    assertthat::assert_that(length(p) == 1)
+    n_covariates <- p
+    assertthat::assert_that(n_covariates >= 3)
+    assertthat::assert_that(length(n) == 1)
+    assertthat::assert_that(length(rho) == 1)
+    assertthat::assert_that(length(lambda) == 1)
+    assertthat::assert_that(length(prev) == (n_covariates - 2))
     ## These alphas
     assertthat::assert_that(length(alphas) == 4)
     assertthat::assert_that(length(gamma) == 1)
