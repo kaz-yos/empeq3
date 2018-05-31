@@ -2,4 +2,7 @@
 
 export(generate_bivariate_normal_data_count)
 export(generate_bivariate_standard_normal_covariate)
+export(generate_cont_count_bin_covariates)
+export(generate_p_dimensional_standard_normal_covariates)
+export(generate_p_norm_count_bin_data_count)
 export(generate_tri_treatment_from_two_covariates)
