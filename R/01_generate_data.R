@@ -203,7 +203,6 @@ generate_bivariate_normal_data_count <- function(n,
 ##' @param prev prevalence vector for X3 through Xp
 ##'
 ##' @param alphas True coefficients for the first and second treatment linear predictors. This vector should contain the intercept. alphas = c(alpha01, alphaXm1, alpha02, alphaXm2)
-##' @param gamma Ratio of the true coefficient for the second variable and the first variable.
 ##' @param sigma scaling of all covariate effects. A higher value means stronger covariate effects, i.e., less clinical equipoise.
 ##'
 ##' @param beta0 Outcome model intercept coefficient
@@ -224,7 +223,6 @@ generate_p_norm_count_bin_data_count <- function(n,
                                                  prev,
                                                  ## Treatment assignment
                                                  alphas,
-                                                 gamma,
                                                  sigma,
                                                  ## Outcome assignment
                                                  beta0,
@@ -241,7 +239,6 @@ generate_p_norm_count_bin_data_count <- function(n,
     assertthat::assert_that(length(prev) == (n_covariates - 2))
     ## These alphas
     assertthat::assert_that(length(alphas) == (n_covariates + 1) * 2)
-    assertthat::assert_that(length(gamma) == 1)
     assertthat::assert_that(length(sigma) == 1)
     ## betaA = c(betaA1, betaA2)
     assertthat::assert_that(length(betaA) == 2)
