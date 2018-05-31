@@ -240,7 +240,7 @@ generate_p_norm_count_bin_data_count <- function(n,
     assertthat::assert_that(length(lambda) == 1)
     assertthat::assert_that(length(prev) == (n_covariates - 2))
     ## These alphas
-    assertthat::assert_that(length(alphas) == 4)
+    assertthat::assert_that(length(alphas) == (n_covariates + 1) * 2)
     assertthat::assert_that(length(gamma) == 1)
     assertthat::assert_that(length(sigma) == 1)
     ## betaA = c(betaA1, betaA2)
@@ -253,22 +253,18 @@ generate_p_norm_count_bin_data_count <- function(n,
 
     ## Extract parameters for use
     alpha01 <- alphas[1]
-    alphaXm1 <- alphas[2]
-    alpha02 <- alphas[3]
-    alphaXm2 <- alphas[4]
+    alphaX1 <- alphas[1 + seq_len(n_covariates)]
+    alpha02 <- alphas[n_covariates + 2]
+    alphaX2 <- alphas[n_covariates + 2 + seq_len(n_covariates)]
     betaA1 <- betaA[1]
     betaA2 <- betaA[2]
     betaXA1 <- betaXA[seq_len(n_covariates)]
     betaXA2 <- betaXA[n_covariates + seq_len(n_covariates)]
 
     n %>%
-        generate_bivariate_standard_normal_covariate(rho = rho) %>%
-        generate_tri_treatment_from_two_covariates(alpha01 = alpha01,
-                                                   alpha02 = alpha02,
-                                                   alphaXm1 = alphaXm1,
-                                                   alphaXm2 = alphaXm2,
-                                                   gamma = gamma,
-                                                   sigma = sigma) %>%
+        generate_p_dimensional_standard_normal_covariates(p = p, rho = rho) %>%
+        datagen3::generate_tri_treatment(alphas1 = c(alpha01, sigma * alphaX1),
+                                         alphas2 = c(alpha02, sigma * alphaX2)) %>%
         datagen3::generate_count_outcome_log_tri_treatment(beta0 = beta0,
                                                            betaA1 = betaA1,
                                                            betaA2 = betaA2,
