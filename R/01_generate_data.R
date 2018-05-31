@@ -26,6 +26,35 @@ generate_bivariate_standard_normal_covariate <- function(n, rho) {
     X
 }
 
+##' Generate p-variate standard normal distribution with correlation rho
+##'
+##' .. content for details ..
+##'
+##' @param n Sample size
+##' @param p Dimension
+##' @param rho Correlation coefficient. corr(Xi, Xj) = rho^abs(i - j).
+##'
+##' @return data_frame containing p covariates X1 through Xp. Each one is marginally N(0,1). Their correlation structure is compound symmetry.
+##'
+##' @export
+generate_p_dimensional_standard_normal_covariates <- function(n, p, rho) {
+    mu <- rep(0, p)
+    ## Create a compound symmetry type correlation matrix
+    Sigma <- matrix(rep(NA, p*p), nrow = p)
+    for (i in seq_len(p)) {
+        for (j in seq_len(p)) {
+            Sigma[i,j] <- rho^abs(i - j)
+        }
+    }
+
+    X <- datagen3::generate_mvn_covariates(n = n,
+                                           mu = mu,
+                                           Sigma = Sigma)
+    ## Fix covariate names
+    names(X) <- gsub("Z", "X", names(X))
+    X
+}
+
 
 ##' Generate three-valued treatment with constraint on
 ##'
