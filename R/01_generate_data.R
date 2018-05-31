@@ -55,6 +55,37 @@ generate_p_dimensional_standard_normal_covariates <- function(n, p, rho) {
     X
 }
 
+##' Generate p covariate, one continuous, one count, and binary
+##'
+##' .. content for details ..
+##'
+##' @param n Sample size
+##' @param p Dimension
+##' @param rho Correlation coefficient. corr(Xi, Xj) = rho^abs(i - j) for the latent p-variate normal distribution.
+##' @param lambda mean parameter for Poisson X2 variable
+##' @param prev prevalence parameter vector for remaining binary variables. This must be p - 2.
+##'
+##' @return data_frame containing p covariates X1 through Xp. Each one is marginally N(0,1). Their correlation structure is compound symmetry.
+##'
+##' @export
+generate_cont_count_bin_covariates <- function(n, p, rho, lambda, prev) {
+    assertthat::assert_that(length(n) == 1)
+    assertthat::assert_that(length(p) == 1)
+    assertthat::assert_that(length(rho) == 1)
+    assertthat::assert_that(length(lambda) == 1)
+    assertthat::assert_that(length(prev) == (p - 2))
+
+    X <- generate_p_dimensional_standard_normal_covariates(n, p, rho)
+    ## Generate a Poisson variable with mean lambda
+    X[[2]] <- qpois(pnorm(X[[2]]), lambda = lambda)
+    ## Generate Bernoulli variables
+    for (i in seq_along(prev)) {
+        X[[2 + i]] <- qbinom(pnorm(X[[2 + i]]), size = 1, prob = prev[i])
+    }
+
+    X
+}
+
 
 ##' Generate three-valued treatment with constraint on
 ##'
