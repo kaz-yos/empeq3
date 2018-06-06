@@ -199,8 +199,8 @@ generate_bivariate_normal_data_count <- function(n,
 ##'
 ##' @param p number of covariates. Must be 3 or more.
 ##' @param rho correlation coefficient
-##' @param lambda mean parameter for X2
-##' @param prev prevalence vector for X3 through Xp
+##' @param lambda mean parameter for X2 (count variable)
+##' @param prev prevalence vector for X3 through Xp (binary variables)
 ##'
 ##' @param alphas True coefficients for the first and second treatment linear predictors. This vector should contain the intercept. alphas = c(alpha01, alphaXm1, alpha02, alphaXm2)
 ##' @param sigma scaling of all covariate effects. A higher value means stronger covariate effects, i.e., less clinical equipoise.
