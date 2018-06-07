@@ -73,15 +73,16 @@ generate_p_dimensional_cont_count_bin_covariates <- function(n, p, rho, lambda, 
     assertthat::assert_that(length(p) == 1)
     assertthat::assert_that(length(rho) == 1)
     assertthat::assert_that(length(lambda) == 1)
-    assertthat::assert_that(length(prev) == (p - 2))
+    assertthat::assert_that(length(prev) == (p - 3))
 
     X <- generate_p_dimensional_standard_normal_covariates(n, p, rho)
-    ## Generate a Poisson variable with mean lambda
+    ## Generate a Poisson variable X2 with mean lambda
     X[[2]] <- qpois(pnorm(X[[2]]), lambda = lambda)
-    ## Generate Bernoulli variables
+    ## Generate Bernoulli variables X3 through Xp-1 with prevalence prev
     for (i in seq_along(prev)) {
         X[[2 + i]] <- qbinom(pnorm(X[[2 + i]]), size = 1, prob = prev[i])
     }
+    ## Note Xp is kept as is
 
     X
 }
@@ -236,7 +237,7 @@ generate_p_norm_count_bin_data_count <- function(n,
     assertthat::assert_that(length(n) == 1)
     assertthat::assert_that(length(rho) == 1)
     assertthat::assert_that(length(lambda) == 1)
-    assertthat::assert_that(length(prev) == (n_covariates - 2))
+    assertthat::assert_that(length(prev) == (n_covariates - 3))
     ## These alphas
     assertthat::assert_that(length(alphas) == (n_covariates + 1) * 2)
     assertthat::assert_that(length(sigma) == 1)
